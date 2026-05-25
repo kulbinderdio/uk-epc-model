@@ -2,6 +2,7 @@
 
 A machine learning model and web application that predicts residential Energy Performance Certificate (EPC) ratings for properties in England and Wales. Trained on 23 million EPC assessments from the public MHCLG register.
 
+**Model on Hugging Face:** https://huggingface.co/kulbinderdio/uk-epc-model  
 See [REPORT.md](REPORT.md) for a full technical writeup covering data findings, model architecture, and accuracy analysis.
 
 ---
