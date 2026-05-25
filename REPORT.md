@@ -169,11 +169,27 @@ A related inference issue was that unknown or missing categorical values at pred
 
 ### 6.1 Algorithm
 
-**LightGBM** (gradient-boosted decision trees) was selected because:
-- It handles mixed numeric/categorical/missing data natively without preprocessing
-- It is the best-performing algorithm on tabular regression benchmarks with this data profile
-- Training 5,000 trees on 19 million rows completes in a reasonable time on a single machine
-- SHAP values provide interpretable per-prediction feature attribution
+**LightGBM** (gradient-boosted decision trees) was selected for several reasons specific to this problem and dataset.
+
+**The data is tabular and mixed-type.** The 40 features span numeric, ordinal, categorical, and binary columns with substantial missing values that are structurally meaningful rather than random — a null `floor_level` means "this is not a flat", a null `mains_gas_flag` means "this property has no gas connection". LightGBM handles this natively by routing NaN values down a dedicated branch at each tree split, preserving the signal. Imputing those nulls before training (as most other algorithms require) would destroy it.
+
+**Scale.** 19 million training rows. LightGBM uses histogram-based binning to avoid sorting data at each split, making it fast enough to train at this scale on a single machine in under an hour. XGBoost on the same data takes several times longer. Deep learning would require a GPU and substantially more tuning.
+
+**High-cardinality categoricals.** Columns like `mainheat_description` and `walls_description` have 50–200 unique values. LightGBM's native categorical support finds the optimal binary partition of categories at each split, which is more powerful than one-hot encoding and avoids the dimensionality explosion it would cause.
+
+**Accuracy on tabular data.** On structured tabular regression benchmarks, gradient-boosted trees consistently outperform neural networks unless the dataset is very large and the features are mostly dense numerics. This dataset is neither — it is wide, sparse, and mixed-type.
+
+**Interpretability.** SHAP values work directly and efficiently on tree ensembles, which mattered for producing feature importance analysis and the recommendations system.
+
+The main alternatives considered:
+
+| Alternative | Why not chosen |
+|-------------|---------------|
+| XGBoost | Equivalent accuracy, 3–5× slower to train at this scale |
+| CatBoost | Strong categorical handling, but slower training and harder to tune |
+| Random forest | Lower accuracy, significantly larger memory footprint at 19M rows |
+| Neural network | Requires imputation, encoding, and scaling; no accuracy advantage on tabular data; harder to interpret |
+| Linear regression | Too simple — EPC ratings are highly non-linear (a cavity-wall-insulated gas-boiler semi-detached scores very differently from an uninsulated oil-heated detached, even at the same floor area) |
 
 ### 6.2 Hyperparameter Search
 
