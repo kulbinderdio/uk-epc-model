@@ -21,6 +21,9 @@ cd web && pnpm dev
 
 Open http://localhost:3000.
 
+<img width="816" height="1010" alt="image" src="https://github.com/user-attachments/assets/ddf2f1d6-a814-42b1-ad5e-49704a5d02c5" />
+
+
 ---
 
 ## Reproducing from scratch
