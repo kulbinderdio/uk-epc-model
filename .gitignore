@@ -1,0 +1,51 @@
+# Raw source data (~55 GB — download separately)
+domestic-csv/
+
+# Processed data and trained model
+data/processed/
+data/models/lgbm_epc.txt
+data/models/eval/
+
+# Keep these (small, useful for contributors)
+!data/models/feature_meta.json
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+*.cover
+.coverage
+
+# Environment
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+
+# uv
+.uv/
+
+# Logs
+*.log
